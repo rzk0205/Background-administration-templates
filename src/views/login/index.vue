@@ -8,38 +8,41 @@
     >
       <div class="title-container">
         <h3 class="title">用户登录</h3>
-        <span class="icon">icon</span>
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="国际化"
+          placement="bottom"
+        >
+          <el-button className="svg-language"
+            ><svg-icon icon="language"></svg-icon
+          ></el-button>
+        </el-tooltip>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
           <el-icon>
-            <avatar />
+            <svg-icon icon="user"></svg-icon>
           </el-icon>
         </span>
-        <el-input v-model="loginForm.username" />
+        <el-input v-model="loginForm.username" placeholder="username" />
       </el-form-item>
       <el-form-item prop="password">
-        <el-input :type="inputType" v-model="loginForm.password">
-          <template #prefix>
-            <el-icon class="el-input__icon">
-              <search />
-            </el-icon>
-          </template>
-          <!-- <template #suffix>
-            <el-icon
-              v-if="inputType === 'password'"
-              @click="handllePassWordStatus"
-              class="el-input__icon"
-              ><Hide
-            /></el-icon>
-            <el-icon
-              v-else
-              @click="handllePassWordStatus"
-              class="el-input__icon"
-              ><View
-            /></el-icon>
-          </template> -->
-        </el-input>
+        <span class="svg-container">
+          <el-icon>
+            <svg-icon icon="password"></svg-icon>
+          </el-icon>
+        </span>
+        <el-input
+          :type="inputType"
+          v-model="loginForm.password"
+          placeholder="password"
+        ></el-input>
+        <span class="svg-pwd" @click="handllePassWordStatus">
+          <el-icon>
+            <svg-icon :icon="passwordIconStatus"></svg-icon>
+          </el-icon>
+        </span>
       </el-form-item>
       <el-button class="login-button" type="primary" @click="handleLoginSubmit"
         >登录</el-button
@@ -48,8 +51,8 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
-import { Avatar, Search } from '@element-plus/icons-vue'
+import { reactive, ref, computed } from 'vue'
+// import { Avatar, Search } from '@element-plus/icons-vue'
 import { validatePassword } from './rule.js'
 const loginForm = reactive({
   username: '',
@@ -74,6 +77,12 @@ const handleLoginSubmit = async () => {
       alert('登录')
     }
   })
+}
+const passwordIconStatus = computed(() => {
+  return inputType.value === 'password' ? 'eye' : 'eye-open'
+})
+const handllePassWordStatus = () => {
+  inputType.value = inputType.value === 'password' ? 'text' : 'password'
 }
 </script>
 <style lang="scss" scoped>
@@ -103,10 +112,19 @@ $cursor: #fff;
       color: #454545;
 
       .svg-container {
-        padding: 6px 5px 6px 15px;
+        padding: 7px 5px 6px 15px;
         color: $dark_gray;
         vertical-align: middle;
         display: inline-block;
+      }
+      .svg-pwd {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        font-size: 16px;
+        color: $dark_gray;
+        cursor: pointer;
+        user-select: none;
       }
     }
 
@@ -135,7 +153,7 @@ $cursor: #fff;
       }
     }
 
-    .title-container {
+    ::v-deep .title-container {
       position: relative;
 
       .title {
@@ -146,12 +164,16 @@ $cursor: #fff;
         margin-bottom: 40px;
       }
 
-      .icon {
+      .svg-language {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 4px;
+        right: 5px;
         color: $light_gray;
+        padding: 1px 3px;
         font-size: 22px;
+        background-color: #fff;
+        border-radius: 2px;
+        border: 0;
       }
     }
 

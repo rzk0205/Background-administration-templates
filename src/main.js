@@ -5,6 +5,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './style/index.scss'
+import installIcons from './icons/index.js'
 
 const app = createApp(App)
+installIcons(app)
 app.use(store).use(router).use(ElementPlus).mount('#app')
