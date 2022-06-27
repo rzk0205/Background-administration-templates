@@ -52,10 +52,9 @@
 </template>
 <script setup>
 import { reactive, ref, computed } from 'vue'
-// import { Avatar, Search } from '@element-plus/icons-vue'
 import { validatePassword } from './rule.js'
 import md5 from 'md5'
-
+import util from '../../utils/util'
 import { useStore } from 'vuex'
 const loginForm = reactive({
   username: '',
@@ -80,7 +79,8 @@ const handleLoginSubmit = async () => {
   if (!LoginForm.value) return
   await LoginForm.value.validate(async (valid) => {
     if (valid) {
-      loginForm.password = md5(loginForm.password)
+      const newLoginForm = util.deepCopy(loginForm)
+      newLoginForm.password = md5(loginForm.password)
       const res = await store.dispatch('handleLoginSubmit', loginForm)
       console.log(res)
     }
