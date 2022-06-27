@@ -54,12 +54,15 @@
 import { reactive, ref, computed } from 'vue'
 // import { Avatar, Search } from '@element-plus/icons-vue'
 import { validatePassword } from './rule.js'
+import md5 from 'md5'
+
+import { useStore } from 'vuex'
 const loginForm = reactive({
   username: '',
   password: ''
 })
 const inputType = ref('password')
-
+// 规则校验
 const loginRules = reactive({
   username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
   password: [
@@ -70,11 +73,16 @@ const loginRules = reactive({
     }
   ]
 })
+// 登录
 const LoginForm = ref(null)
+const store = useStore()
 const handleLoginSubmit = async () => {
-  await LoginForm.value.validate((valid) => {
+  if (!LoginForm.value) return
+  await LoginForm.value.validate(async (valid) => {
     if (valid) {
-      alert('登录')
+      loginForm.password = md5(loginForm.password)
+      const res = await store.dispatch('handleLoginSubmit', loginForm)
+      console.log(res)
     }
   })
 }
