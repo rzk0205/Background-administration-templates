@@ -6,6 +6,8 @@ import md5 from 'md5'
 
 // 引入loading
 import loading from './loading'
+// 引入store
+import store from '@/store'
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -18,10 +20,10 @@ instance.interceptors.request.use(
     // 开启loading加载
     loading.open()
 
-    // const token = store.state.token
-    // if (token) {
-    //     config.headers.authorization = "Bearer " + token
-    // }
+    const token = store.state.token
+    if (token) {
+      config.headers.authorization = 'Bearer ' + token
+    }
     const { icode, time } = getTestICode()
     config.headers.icode = icode
     config.headers.codeType = time
