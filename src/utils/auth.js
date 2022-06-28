@@ -5,8 +5,11 @@ const TOKEN_KEY = 'token'
 const USER_INFO_KEY = 'userInfo'
 
 // 设置token
-export function setToken(token) {
-  localStorage.setItem(TOKEN_KEY, token)
+export function setToken(key, value) {
+  if (typeof value === 'object') {
+    value = JSON.stringify(value)
+  }
+  localStorage.setItem(key, value)
 }
 
 // 设置用户信息
@@ -15,8 +18,13 @@ export function setUserInfo(userInfo) {
 }
 
 // 获取token
-export function getToken() {
-  return localStorage.getItem(TOKEN_KEY)
+export const getToken = (key) => {
+  const data = localStorage.getItem(key)
+  try {
+    return JSON.parse(data)
+  } catch (error) {
+    return data
+  }
 }
 
 // 获取用户信息

@@ -3,23 +3,24 @@ import { setToken, getToken } from '../../utils/auth'
 export default {
   namespaced: true,
   state: {
-    token: getToken() || ''
+    token: getToken('token') || ''
   },
   getters: {},
   mutations: {
     setToken(state, token) {
       state.token = token
-      setToken(token)
+      setToken('token', token)
     }
   },
   actions: {
     async login({ commit }, payload) {
-      const res = await UserApi.login(payload)
-      if (res) {
-        console.log(res)
-        commit('setToken', res.data.data.token)
+      try {
+        const res = await UserApi.login(payload)
+        commit('setToken', res.token)
+        return res
+      } catch (err) {
+        console.log(err)
       }
-      return res
     }
   },
   modules: {}

@@ -56,9 +56,10 @@ import { validatePassword } from './rule.js'
 import md5 from 'md5'
 import util from '../../utils/util'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 const loginForm = reactive({
-  username: '',
-  password: ''
+  username: 'super-admin',
+  password: '123456'
 })
 const inputType = ref('password')
 // 规则校验
@@ -75,6 +76,7 @@ const loginRules = reactive({
 // 登录
 const LoginForm = ref(null)
 const store = useStore()
+const router = useRouter()
 const handleLoginSubmit = async () => {
   if (!LoginForm.value) return
   await LoginForm.value.validate(async (valid) => {
@@ -82,7 +84,7 @@ const handleLoginSubmit = async () => {
       const newLoginForm = util.deepCopy(loginForm)
       newLoginForm.password = md5(loginForm.password)
       const res = await store.dispatch('user/login', newLoginForm)
-      console.log(res)
+      if (res.token) router.push('/')
     }
   })
 }

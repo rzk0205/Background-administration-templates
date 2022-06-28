@@ -7,7 +7,9 @@ import md5 from 'md5'
 // 引入loading
 import loading from './loading'
 // 引入store
-import store from '@/store'
+import store from '../store/modules/user'
+
+import { ElMessage } from 'element-plus'
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -42,15 +44,28 @@ instance.interceptors.response.use(
     // 关闭loading加载
     loading.close()
     console.log(res) // 后端响应的数据
-    return res
+    const { data, message, success } = res.data
+    // TODO 全局相应处理
+    if (success) {
+      return data
+    } else {
+      _showError(message)
+      return Promise.reject(new Error(message))
+    }
   },
-  (err) => {
+  (error) => {
     // 关闭loading加载
     loading.close()
-    return Promise.reject(err)
+    // 响应失败进行信息处理
+    _showError(error.message)
+    return Promise.reject(error)
   }
 )
-
+// 响应提示信息
+const _showError = (message) => {
+  const info = message || '发生未知错误'
+  ElMessage.error(info)
+}
 // 封装 处理get请求方式的参数问题
 function request(options) {
   options.method = options.method || 'get'
