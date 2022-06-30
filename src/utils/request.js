@@ -7,7 +7,7 @@ import md5 from 'md5'
 // 引入loading
 import loading from './loading'
 // 引入store
-import store from '../store/modules/user'
+import store from '../store'
 
 import { ElMessage } from 'element-plus'
 // 创建一个实例
@@ -22,14 +22,14 @@ instance.interceptors.request.use(
     // 开启loading加载
     loading.open()
 
-    const token = store.state.token
-    if (token) {
-      config.headers.authorization = 'Bearer ' + token
-    }
     const { icode, time } = getTestICode()
     config.headers.icode = icode
     config.headers.codeType = time
-    console.log('拦截成功')
+    // console.log('拦截成功')
+    const token = store.getters.token
+    if (token) {
+      config.headers.authorization = 'Bearer ' + token
+    }
     return config
   },
   (err) => {
@@ -43,7 +43,7 @@ instance.interceptors.response.use(
   (res) => {
     // 关闭loading加载
     loading.close()
-    console.log(res) // 后端响应的数据
+    // console.log(res) // 后端响应的数据
     const { data, message, success } = res.data
     // TODO 全局相应处理
     if (success) {
