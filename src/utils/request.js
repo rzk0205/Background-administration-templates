@@ -9,7 +9,10 @@ import loading from './loading'
 // 引入store
 import store from '../store'
 
+import router from '../router'
 import { ElMessage } from 'element-plus'
+// 引入时间戳判断
+import { isCheckTimeout } from './auth'
 // 创建一个实例
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -27,8 +30,13 @@ instance.interceptors.request.use(
     config.headers.codeType = time
     // console.log('拦截成功')
     const token = store.getters.token
+    if (token) config.headers.authorization = 'Bearer ' + token
     if (token) {
-      config.headers.authorization = 'Bearer ' + token
+      if (isCheckTimeout()) {
+        store.dispatch('user/logout')
+        router.push('/login')
+        return Promise.reject(new Error('token 失效'))
+      }
     }
     return config
   },
@@ -56,6 +64,16 @@ instance.interceptors.response.use(
   (error) => {
     // 关闭loading加载
     loading.close()
+    console.log(error)
+    // TODO token过期状态  401 描述信息  无感知登录 无感知刷新
+    if (
+      error.response &&
+      error.response.data &&
+      error.response.data.code === 401
+    ) {
+      store.dispatch('user/lgout')
+      router.push('/login')
+    }
     // 响应失败进行信息处理
     _showError(error.message)
     return Promise.reject(error)

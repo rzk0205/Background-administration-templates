@@ -57,6 +57,7 @@ import md5 from 'md5'
 import util from '../../utils/util'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { setTimeStamp } from '@/utils/auth.js'
 const loginForm = reactive({
   username: 'super-admin',
   password: '123456'
@@ -84,6 +85,7 @@ const handleLoginSubmit = async () => {
       const newLoginForm = util.deepCopy(loginForm)
       newLoginForm.password = md5(loginForm.password)
       const res = await store.dispatch('user/login', newLoginForm)
+      setTimeStamp()
       if (res.token) router.push('/')
     }
   })
