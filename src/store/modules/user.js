@@ -1,10 +1,11 @@
 import UserApi from '../../api/user'
 import { setItem, getItem, removeItem } from '../../utils/storage'
+import { resetRouter } from '@/utils/removeRoter'
 export default {
   namespaced: true,
   state: {
     token: getItem('token') || '',
-    userInfo: getItem('userInfo') || ''
+    userInfo: {}
   },
   getters: {},
   mutations: {
@@ -14,7 +15,6 @@ export default {
     },
     setUserInfo(state, uesrInfo) {
       state.userInfo = uesrInfo
-      setItem('userInfo', uesrInfo)
     }
   },
   actions: {
@@ -31,14 +31,16 @@ export default {
       try {
         const res = await UserApi.getUserInfo()
         commit('setUserInfo', res)
+        console.log(res)
         return res
       } catch (error) {
         console.log(error)
       }
     },
     logout({ commit }) {
+      resetRouter()
       commit('setToken', '')
-      commit('setUserInfo', '')
+      commit('setUserInfo', {})
       removeItem('token')
       removeItem('userInfo')
     }

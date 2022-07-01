@@ -54,7 +54,7 @@ export const generateMenus = (routes) => {
     // 获取三条数据的path路径
     const routePath = item.path
 
-    let route = result.find((item) => item.path === routePath)
+    let route = result.find((route) => route.path === routePath)
 
     if (!route) {
       route = {
