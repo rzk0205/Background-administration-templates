@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const routes = [
+        {
+          path: 1,
+          name: '1haha'
+        },
+        {
+          path: 2,
+          name: '2haha'
+        },
+        {
+          path: 3,
+          name: '3haha'
+        },
+        {
+          path: 4,
+          name: '4haha'
+        }
+      ]
+      const filterRouters = (routes) => {
+        // childrenRoutes 所有的子路由
+        const childrenRoutes = [
+          {
+            path: 1,
+            name: '1haha'
+          },
+          {
+            path: 2,
+            name: '2haha'
+          },
+          {
+            path: 3,
+            name: '3haha'
+          }
+        ]
+        // routes 完整的路由 16 数据
+        return routes.filter((route) => {
+          return !childrenRoutes.find((childrenRoute) => {
+            return childrenRoute.path === route.path
+          })
+        })
+      }
+      console.log(filterRouters(routes))
+    </script>
+  </body>
+</html>
